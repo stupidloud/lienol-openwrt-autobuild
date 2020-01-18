@@ -1,4 +1,4 @@
-name: OpenWrt-CI X86自动编译工程
+name: X86自动编译
 
 on:
   schedule:
