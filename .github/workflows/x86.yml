@@ -21,7 +21,7 @@ jobs:
         with:
           ref: master
 
-      - name: Space cleanup
+      - name: Space cleanup & Eenvironment initialzation
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
@@ -43,16 +43,18 @@ jobs:
 
       - name: Custom configure file
         run: |
-          cp configdiff openwrt/.config
+          cp diffconfig openwrt/.config
           make defconfig
           
       - name: Make download
         run: |
+          cd openwrt
           make download -j8
           find dl -size -1024c -exec rm -f {} \;
           
       - name: Compile firmware
         run: |
+          cd openwrt
           make -j$(($(nproc) + 1)) || make -j1 V=s
           echo "======================="
           echo "Space usage:"
