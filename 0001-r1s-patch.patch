@@ -1,0 +1,496 @@
+From b0ec7e9d1f93155b2a708a9f0fac6f3de9f1c29b Mon Sep 17 00:00:00 2001
+From: klever1988 <klever1988@protonmail.com>
+Date: Sun, 26 Jan 2020 16:45:52 +0000
+Subject: [PATCH] r1s patch
+
+---
+ package/boot/uboot-sunxi/Makefile             |   8 +
+ .../uboot-sunxi/patches/401-add-r1s-h5.patch  | 140 ++++++++++
+ .../sunxi/base-files/etc/board.d/01_leds      |  20 ++
+ target/linux/sunxi/image/cortex-a53.mk        |  15 ++
+ ...0-ARM-dts-friendlyelec-nanopi-r1s-h5.patch | 249 ++++++++++++++++++
+ 5 files changed, 432 insertions(+)
+ create mode 100644 package/boot/uboot-sunxi/patches/401-add-r1s-h5.patch
+ create mode 100755 target/linux/sunxi/base-files/etc/board.d/01_leds
+ create mode 100644 target/linux/sunxi/patches-4.14/230-ARM-dts-friendlyelec-nanopi-r1s-h5.patch
+
+diff --git a/package/boot/uboot-sunxi/Makefile b/package/boot/uboot-sunxi/Makefile
+index 6b83bd27c6..d4c96b91fa 100644
+--- a/package/boot/uboot-sunxi/Makefile
++++ b/package/boot/uboot-sunxi/Makefile
+@@ -208,6 +208,14 @@ define U-Boot/nanopi_neo2
+   UENV:=a64
+ endef
+ 
++define U-Boot/nanopi_r1s
++  BUILD_SUBTARGET:=cortexa53
++  NAME:=NanoPi R1S (H5)
++  BUILD_DEVICES:=sun50i-h5-nanopi-r1s
++  DEPENDS:=+PACKAGE_u-boot-nanopi_r1s:arm-trusted-firmware-sunxi
++  UENV:=a64
++endef
++
+ define U-Boot/pine64_plus
+   BUILD_SUBTARGET:=cortexa53
+   NAME:=Pine64 Plus A64
+diff --git a/package/boot/uboot-sunxi/patches/401-add-r1s-h5.patch b/package/boot/uboot-sunxi/patches/401-add-r1s-h5.patch
+new file mode 100644
+index 0000000000..c618cb72aa
+--- /dev/null
++++ b/package/boot/uboot-sunxi/patches/401-add-r1s-h5.patch
+@@ -0,0 +1,140 @@
++From ceca46d683970cc002c8842f350410bda3e4125b Mon Sep 17 00:00:00 2001
++From: jerrykuku <jerrykuku@qq.com>
++Date: Sun, 22 Dec 2019 15:09:12 +0800
++Subject: [PATCH] add r1s h5
++
++---
++ arch/arm/dts/Makefile                 |  1 +
++ arch/arm/dts/sun50i-h5-nanopi-r1s.dts | 86 +++++++++++++++++++++++++++
++ configs/nanopi_r1s_defconfig          | 14 +++++
++ 3 files changed, 101 insertions(+)
++ create mode 100644 arch/arm/dts/sun50i-h5-nanopi-r1s.dts
++ create mode 100644 configs/nanopi_r1s_defconfig
++
++diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
++index 5b6a43b..7c83422 100644
++--- a/arch/arm/dts/Makefile
+++++ b/arch/arm/dts/Makefile
++@@ -372,6 +372,7 @@ dtb-$(CONFIG_MACH_SUN8I_V3S) += \
++ dtb-$(CONFIG_MACH_SUN50I_H5) += \
++ 	sun50i-h5-nanopi-neo2.dtb \
++ 	sun50i-h5-nanopi-neo-plus2.dtb \
+++	sun50i-h5-nanopi-r1s.dtb \
++ 	sun50i-h5-orangepi-zero-plus.dtb \
++ 	sun50i-h5-orangepi-pc2.dtb \
++ 	sun50i-h5-orangepi-prime.dtb \
++diff --git a/arch/arm/dts/sun50i-h5-nanopi-r1s.dts b/arch/arm/dts/sun50i-h5-nanopi-r1s.dts
++new file mode 100644
++index 0000000..4992ef5
++--- /dev/null
+++++ b/arch/arm/dts/sun50i-h5-nanopi-r1s.dts
++@@ -0,0 +1,86 @@
+++/*
+++ * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+++ * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
+++ *
+++ * This file is dual-licensed: you can use it either under the terms
+++ * of the GPL or the X11 license, at your option. Note that this dual
+++ * licensing only applies to this file, and not this project as a
+++ * whole.
+++ *
+++ *  a) This library is free software; you can redistribute it and/or
+++ *     modify it under the terms of the GNU General Public License as
+++ *     published by the Free Software Foundation; either version 2 of the
+++ *     License, or (at your option) any later version.
+++ *
+++ *     This library is distributed in the hope that it will be useful,
+++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+++ *     GNU General Public License for more details.
+++ *
+++ * Or, alternatively,
+++ *
+++ *  b) Permission is hereby granted, free of charge, to any person
+++ *     obtaining a copy of this software and associated documentation
+++ *     files (the "Software"), to deal in the Software without
+++ *     restriction, including without limitation the rights to use,
+++ *     copy, modify, merge, publish, distribute, sublicense, and/or
+++ *     sell copies of the Software, and to permit persons to whom the
+++ *     Software is furnished to do so, subject to the following
+++ *     conditions:
+++ *
+++ *     The above copyright notice and this permission notice shall be
+++ *     included in all copies or substantial portions of the Software.
+++ *
+++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+++ *     OTHER DEALINGS IN THE SOFTWARE.
+++ */
+++
+++/dts-v1/;
+++
+++#include "sun50i-h5.dtsi"
+++
+++#include <dt-bindings/gpio/gpio.h>
+++
+++/ {
+++	model = "FriendlyElec NanoPi-R1S-H5";
+++	compatible = "friendlyelec,nanopi-r1s-h5", "allwinner,sun50i-h5";
+++
+++	aliases {
+++		serial0 = &uart0;
+++	};
+++
+++	chosen {
+++		stdout-path = "serial0:115200n8";
+++	};
+++
+++	reg_vcc3v3: vcc3v3 {
+++		compatible = "regulator-fixed";
+++		regulator-name = "vcc3v3";
+++		regulator-min-microvolt = <3300000>;
+++		regulator-max-microvolt = <3300000>;
+++	};
+++};
+++
+++&mmc0 {
+++	compatible = "allwinner,sun50i-h5-mmc",
+++		     "allwinner,sun50i-a64-mmc",
+++		     "allwinner,sun5i-a13-mmc";
+++	pinctrl-names = "default";
+++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+++	vmmc-supply = <&reg_vcc3v3>;
+++	bus-width = <4>;
+++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+++	status = "okay";
+++};
+++
+++&uart0 {
+++	pinctrl-names = "default";
+++	pinctrl-0 = <&uart0_pins_a>;
+++	status = "okay";
+++};
++diff --git a/configs/nanopi_r1s_defconfig b/configs/nanopi_r1s_defconfig
++new file mode 100644
++index 0000000..3f6ff4d
++--- /dev/null
+++++ b/configs/nanopi_r1s_defconfig
++@@ -0,0 +1,14 @@
+++CONFIG_ARM=y
+++CONFIG_ARCH_SUNXI=y
+++CONFIG_SPL=y
+++CONFIG_MACH_SUN50I_H5=y
+++CONFIG_DRAM_CLK=672
+++CONFIG_DRAM_ZQ=3881977
+++CONFIG_DEFAULT_DEVICE_TREE="sun50i-h5-nanopi-r1s"
+++# CONFIG_SYS_MALLOC_CLEAR_ON_INIT is not set
+++# CONFIG_CMD_FLASH is not set
+++# CONFIG_SPL_DOS_PARTITION is not set
+++# CONFIG_SPL_EFI_PARTITION is not set
+++CONFIG_SUN8I_EMAC=y
+++CONFIG_USB_EHCI_HCD=y
+++CONFIG_SYS_USB_EVENT_POLL_VIA_INT_QUEUE=y
++-- 
++2.21.0.windows.1
++
+diff --git a/target/linux/sunxi/base-files/etc/board.d/01_leds b/target/linux/sunxi/base-files/etc/board.d/01_leds
+new file mode 100755
+index 0000000000..8b58ef0902
+--- /dev/null
++++ b/target/linux/sunxi/base-files/etc/board.d/01_leds
+@@ -0,0 +1,20 @@
++#!/bin/sh
++
++. /lib/functions/uci-defaults.sh
++
++board_config_update
++
++case "$(board_name)" in
++"friendlyelec,nanopi-r1" \
++|"friendlyelec,nanopi-r1s-h3" \
++|"friendlyelec,nanopi-r1s-h5")
++	ucidef_set_led_netdev "wan_link" "led2-wan" "LED2" "eth0" "link"
++	ucidef_set_led_netdev "lan_link" "led3-lan" "LED3" "eth1" "link"
++	;;
++*)
++	;;
++esac
++
++board_config_flush
++
++exit 0
+diff --git a/target/linux/sunxi/image/cortex-a53.mk b/target/linux/sunxi/image/cortex-a53.mk
+index 65551407ce..424db0b01a 100644
+--- a/target/linux/sunxi/image/cortex-a53.mk
++++ b/target/linux/sunxi/image/cortex-a53.mk
+@@ -27,6 +27,20 @@ endef
+ 
+ TARGET_DEVICES += sun50i-h5-nanopi-neo2
+ 
++define Device/sun50i-h5-nanopi-r1s
++  DEVICE_TITLE:=Nanopi R1S (H5)
++  DEVICE_PACKAGES:=kmod-rtc-sunxi \
++		kmod-leds-gpio kmod-ledtrig-heartbeat \
++		kmod-brcmfmac brcmfmac-firmware-43430-sdio wpad-basic \
++    kmod-usb-net kmod-usb-net-rtl8152
++  SUPPORTED_DEVICES:=nanopi-r1s
++  SUNXI_DTS:=allwinner/sun50i-h5-nanopi-r1s
++  KERNEL_NAME := Image
++  KERNEL := kernel-bin
++endef
++
++TARGET_DEVICES += sun50i-h5-nanopi-r1s
++
+ define Device/sun50i-a64-pine64-plus
+   DEVICE_TITLE:=Pine64 Plus A64
+   SUPPORTED_DEVICES:=pine64,pine64-plus
+@@ -68,4 +82,5 @@ endef
+ 
+ TARGET_DEVICES += sun50i-h5-orangepi-pc2
+ 
++
+ endif
+diff --git a/target/linux/sunxi/patches-4.14/230-ARM-dts-friendlyelec-nanopi-r1s-h5.patch b/target/linux/sunxi/patches-4.14/230-ARM-dts-friendlyelec-nanopi-r1s-h5.patch
+new file mode 100644
+index 0000000000..102e623ae7
+--- /dev/null
++++ b/target/linux/sunxi/patches-4.14/230-ARM-dts-friendlyelec-nanopi-r1s-h5.patch
+@@ -0,0 +1,249 @@
++Index: linux-4.14.158/arch/arm64/boot/dts/allwinner/Makefile
++===================================================================
++--- a/arch/arm64/boot/dts/allwinner/Makefile	2019-12-22 13:59:07.075152708 +0800
+++++ b/arch/arm64/boot/dts/allwinner/Makefile	2019-12-22 14:03:57.208779217 +0800
++@@ -11,6 +11,7 @@
++ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
++ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo2.dtb
++ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo-plus2.dtb
+++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-r1s.dtb
++ 
++ always		:= $(dtb-y)
++ subdir-y	:= $(dts-dirs)
++Index: linux-4.14.158/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-r1s.dts
++===================================================================
++--- /dev/null	1970-01-01 00:00:00.000000000 +0000
+++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-r1s.dts	2019-12-22 14:04:36.978610138 +0800
++@@ -0,0 +1,232 @@
+++/*
+++ * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+++ *
+++ * This file is dual-licensed: you can use it either under the terms
+++ * of the GPL or the X11 license, at your option. Note that this dual
+++ * licensing only applies to this file, and not this project as a
+++ * whole.
+++ *
+++ *  a) This file is free software; you can redistribute it and/or
+++ *     modify it under the terms of the GNU General Public License as
+++ *     published by the Free Software Foundation; either version 2 of the
+++ *     License, or (at your option) any later version.
+++ *
+++ *     This file is distributed in the hope that it will be useful,
+++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+++ *     GNU General Public License for more details.
+++ *
+++ * Or, alternatively,
+++ *
+++ *  b) Permission is hereby granted, free of charge, to any person
+++ *     obtaining a copy of this software and associated documentation
+++ *     files (the "Software"), to deal in the Software without
+++ *     restriction, including without limitation the rights to use,
+++ *     copy, modify, merge, publish, distribute, sublicense, and/or
+++ *     sell copies of the Software, and to permit persons to whom the
+++ *     Software is furnished to do so, subject to the following
+++ *     conditions:
+++ *
+++ *     The above copyright notice and this permission notice shall be
+++ *     included in all copies or substantial portions of the Software.
+++ *
+++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+++ *     OTHER DEALINGS IN THE SOFTWARE.
+++ */
+++
+++/dts-v1/;
+++#include "sun50i-h5.dtsi"
+++
+++#include <dt-bindings/gpio/gpio.h>
+++#include <dt-bindings/input/input.h>
+++#include <dt-bindings/pinctrl/sun4i-a10.h>
+++#include <dt-bindings/thermal/thermal.h>
+++/ {
+++	model = "FriendlyElec NanoPi-R1S-H5";
+++	compatible = "friendlyelec,nanopi-r1s-h5", "allwinner,sun50i-h5";
+++
+++	aliases {
+++		ethernet0 = &emac;
+++		serial0 = &uart0;
+++	};
+++
+++
+++	chosen {
+++		stdout-path = "serial0:115200n8";
+++	};
+++	
+++	wifi_pwrseq: wifi_pwrseq {
+++		compatible = "mmc-pwrseq-simple";
+++		pinctrl-names = "default";
+++		pinctrl-0 = <&wifi_en_npi>;
+++		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
+++		post-power-on-delay-ms = <200>;
+++	};
+++	
+++	r-gpio-keys {
+++        compatible = "gpio-keys";
+++
+++        k1@0 {
+++            label = "k1";
+++            linux,code = <KEY_POWER>;
+++            gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
+++        };
+++    };
+++
+++	leds {
+++		compatible = "gpio-leds";
+++
+++		status {
+++			label = "status_led";
+++			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>;
+++			linux,default-trigger = "heartbeat";
+++		};
+++
+++		led2 {
+++			label = "LED2";
+++			gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>;
+++			default-state = "off";
+++			linux,default-trigger = "netdev";
+++		};
+++
+++		led3 {
+++			label = "LED3";
+++			gpios = <&pio 0 9 GPIO_ACTIVE_HIGH>;
+++			default-state = "off";
+++			linux,default-trigger = "netdev";
+++		};
+++	};
+++
+++	reg_gmac_3v3: gmac-3v3 {
+++		compatible = "regulator-fixed";
+++		regulator-name = "gmac-3v3";
+++		regulator-min-microvolt = <3300000>;
+++		regulator-max-microvolt = <3300000>;
+++		startup-delay-us = <100000>;
+++		enable-active-high;
+++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
+++	};
+++
+++	reg_vcc3v3: vcc3v3 {
+++		compatible = "regulator-fixed";
+++		regulator-name = "vcc3v3";
+++		regulator-min-microvolt = <3300000>;
+++		regulator-max-microvolt = <3300000>;
+++	};
+++
+++	reg_usb0_vbus: usb0-vbus {
+++		compatible = "regulator-fixed";
+++		regulator-name = "usb0-vbus";
+++		regulator-min-microvolt = <5000000>;
+++		regulator-max-microvolt = <5000000>;
+++		enable-active-high;
+++		gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* PL2 */
+++		status = "okay";
+++	};
+++};
+++
+++
+++
+++
+++&ehci0 {
+++    status = "okay";
+++};
+++
+++&ohci0 {
+++    status = "okay";
+++};
+++
+++&ehci1 {
+++    status = "okay";
+++};
+++
+++&ohci1 {
+++    status = "okay";
+++};
+++
+++&ehci2 {
+++    status = "okay";
+++};
+++
+++&ohci2 {
+++    status = "okay";
+++};
+++
+++&ehci3 {
+++    status = "okay";
+++};
+++
+++&ohci3 {
+++    status = "okay";
+++};
+++
+++&emac {
+++	pinctrl-names = "default";
+++	pinctrl-0 = <&emac_rgmii_pins>;
+++	phy-supply = <&reg_gmac_3v3>;
+++	phy-handle = <&ext_rgmii_phy>;
+++	phy-mode = "rgmii";
+++	status = "okay";
+++};
+++
+++&external_mdio {
+++	ext_rgmii_phy: ethernet-phy@7 {
+++		compatible = "ethernet-phy-ieee802.3-c22";
+++		reg = <7>;
+++	};
+++};
+++
+++&mmc0 {
+++	pinctrl-names = "default";
+++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+++	vmmc-supply = <&reg_vcc3v3>;
+++	bus-width = <4>;
+++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+++	status = "okay";
+++};
+++
+++&mmc1 {
+++	pinctrl-names = "default";
+++	pinctrl-0 = <&mmc1_pins_a>;
+++	vmmc-supply = <&reg_vcc3v3>;
+++	vqmmc-supply = <&reg_vcc3v3>;
+++	mmc-pwrseq = <&wifi_pwrseq>;
+++	bus-width = <4>;
+++	non-removable;
+++	status = "okay";
+++};
+++&r_pio {
+++	wifi_en_npi: wifi_en_pin {
+++		pins = "PL7";
+++		function = "gpio_out";
+++    };
+++};
+++
+++&uart0 {
+++	pinctrl-names = "default";
+++	pinctrl-0 = <&uart0_pins_a>;
+++	status = "okay";
+++};
+++
+++&usb_otg {
+++	dr_mode = "peripheral";
+++	status = "okay";
+++};
+++&reg_usb0_vbus {
+++    gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* PL2 */
+++    status = "okay";
+++};
+++
+++&usbphy {
+++	/* USB Type-A port's VBUS is always on */
+++	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
+++	usb0_vbus-supply = <&reg_usb0_vbus>;
+++	status = "okay";
+++};
+++
+-- 
+2.17.1
+
