@@ -37,6 +37,7 @@ jobs:
           
           git clone https://github.com/Lienol/openwrt
           cd openwrt
+          git apply ../0001-r1s-patch.patch
           ./scripts/feeds clean && ./scripts/feeds update -a && ./scripts/feeds install -a
           
       - name: Custom configure file
