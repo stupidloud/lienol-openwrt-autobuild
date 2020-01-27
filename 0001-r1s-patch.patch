@@ -1,19 +1,16 @@
-From a2c08a78c097ff7870705cfe4b4f54592adf3749 Mon Sep 17 00:00:00 2001
+From 4e6e5c039c332f6a13b172e2806706d47a5eca54 Mon Sep 17 00:00:00 2001
 From: klever1988 <klever1988@protonmail.com>
-Date: Sun, 26 Jan 2020 16:45:52 +0000
+Date: Mon, 27 Jan 2020 12:44:40 +0000
 Subject: [PATCH] r1s patch
 
-fix
-
-lan port
 ---
  package/boot/uboot-sunxi/Makefile             |   9 +
  .../uboot-sunxi/patches/401-add-r1s-h5.patch  | 140 ++++++++++
  .../sunxi/base-files/etc/board.d/01_leds      |  20 ++
  .../sunxi/base-files/etc/board.d/02_network   |  27 ++
- target/linux/sunxi/image/cortex-a53.mk        |  15 ++
+ target/linux/sunxi/image/cortex-a53.mk        |  14 +
  ...0-ARM-dts-friendlyelec-nanopi-r1s-h5.patch | 249 ++++++++++++++++++
- 6 files changed, 460 insertions(+)
+ 6 files changed, 459 insertions(+)
  create mode 100644 package/boot/uboot-sunxi/patches/401-add-r1s-h5.patch
  create mode 100755 target/linux/sunxi/base-files/etc/board.d/01_leds
  create mode 100644 target/linux/sunxi/patches-4.14/230-ARM-dts-friendlyelec-nanopi-r1s-h5.patch
@@ -256,7 +253,7 @@ index 984d5b3be6..67a93b93a5 100755
  	ucidef_set_interface_lan 'eth0'
  	;;
 diff --git a/target/linux/sunxi/image/cortex-a53.mk b/target/linux/sunxi/image/cortex-a53.mk
-index 65551407ce..424db0b01a 100644
+index 65551407ce..a4baec9fa9 100644
 --- a/target/linux/sunxi/image/cortex-a53.mk
 +++ b/target/linux/sunxi/image/cortex-a53.mk
 @@ -27,6 +27,20 @@ endef
@@ -280,12 +277,6 @@ index 65551407ce..424db0b01a 100644
  define Device/sun50i-a64-pine64-plus
    DEVICE_TITLE:=Pine64 Plus A64
    SUPPORTED_DEVICES:=pine64,pine64-plus
-@@ -68,4 +82,5 @@ endef
- 
- TARGET_DEVICES += sun50i-h5-orangepi-pc2
- 
-+
- endif
 diff --git a/target/linux/sunxi/patches-4.14/230-ARM-dts-friendlyelec-nanopi-r1s-h5.patch b/target/linux/sunxi/patches-4.14/230-ARM-dts-friendlyelec-nanopi-r1s-h5.patch
 new file mode 100644
 index 0000000000..102e623ae7
