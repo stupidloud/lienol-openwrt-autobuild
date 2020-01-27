@@ -1,21 +1,25 @@
-From b0ec7e9d1f93155b2a708a9f0fac6f3de9f1c29b Mon Sep 17 00:00:00 2001
+From a2c08a78c097ff7870705cfe4b4f54592adf3749 Mon Sep 17 00:00:00 2001
 From: klever1988 <klever1988@protonmail.com>
 Date: Sun, 26 Jan 2020 16:45:52 +0000
 Subject: [PATCH] r1s patch
 
+fix
+
+lan port
 ---
- package/boot/uboot-sunxi/Makefile             |   8 +
+ package/boot/uboot-sunxi/Makefile             |   9 +
  .../uboot-sunxi/patches/401-add-r1s-h5.patch  | 140 ++++++++++
  .../sunxi/base-files/etc/board.d/01_leds      |  20 ++
+ .../sunxi/base-files/etc/board.d/02_network   |  27 ++
  target/linux/sunxi/image/cortex-a53.mk        |  15 ++
  ...0-ARM-dts-friendlyelec-nanopi-r1s-h5.patch | 249 ++++++++++++++++++
- 5 files changed, 432 insertions(+)
+ 6 files changed, 460 insertions(+)
  create mode 100644 package/boot/uboot-sunxi/patches/401-add-r1s-h5.patch
  create mode 100755 target/linux/sunxi/base-files/etc/board.d/01_leds
  create mode 100644 target/linux/sunxi/patches-4.14/230-ARM-dts-friendlyelec-nanopi-r1s-h5.patch
 
 diff --git a/package/boot/uboot-sunxi/Makefile b/package/boot/uboot-sunxi/Makefile
-index 6b83bd27c6..d4c96b91fa 100644
+index 6b83bd27c6..64cb390738 100644
 --- a/package/boot/uboot-sunxi/Makefile
 +++ b/package/boot/uboot-sunxi/Makefile
 @@ -208,6 +208,14 @@ define U-Boot/nanopi_neo2
@@ -33,6 +37,14 @@ index 6b83bd27c6..d4c96b91fa 100644
  define U-Boot/pine64_plus
    BUILD_SUBTARGET:=cortexa53
    NAME:=Pine64 Plus A64
+@@ -270,6 +278,7 @@ UBOOT_TARGETS := \
+ 	nanopi_neo \
+ 	nanopi_neo_plus2 \
+ 	nanopi_neo2 \
++	nanopi_r1s \
+ 	orangepi_zero \
+ 	orangepi_r1 \
+ 	orangepi_one \
 diff --git a/package/boot/uboot-sunxi/patches/401-add-r1s-h5.patch b/package/boot/uboot-sunxi/patches/401-add-r1s-h5.patch
 new file mode 100644
 index 0000000000..c618cb72aa
@@ -205,6 +217,44 @@ index 0000000000..8b58ef0902
 +board_config_flush
 +
 +exit 0
+diff --git a/target/linux/sunxi/base-files/etc/board.d/02_network b/target/linux/sunxi/base-files/etc/board.d/02_network
+index 984d5b3be6..67a93b93a5 100755
+--- a/target/linux/sunxi/base-files/etc/board.d/02_network
++++ b/target/linux/sunxi/base-files/etc/board.d/02_network
+@@ -18,6 +18,33 @@ case "$(board_name)" in
+ "xunlong,orangepi-r1")
+ 	ucidef_set_interfaces_lan_wan "eth0" "eth1"
+ 	;;
++"friendlyelec,nanopi-r1" \
++|"friendlyelec,nanopi-r1s-h3" \
++|"friendlyelec,nanopi-r1s-h5")
++	ucidef_set_interfaces_lan_wan "eth1" "eth0"
++	;;
++"friendlyelec,nanopi-m1-plus" \
++|"friendlyelec,nanopi-k1-plus" \
++|"friendlyelec,nanopi-duo" \
++|"friendlyelec,nanopi-duo2" \
++|"friendlyelec,nanopi-neo-plus2" \
++|"friendlyelec,nanopi-neo-s")
++	ucidef_set_interfaces_lan_wan "wlan0" "eth0"
++	;;
++"friendlyelec,nanopi-neo" \
++|"friendlyelec,nanopi-neo2" \
++|"friendlyelec,nanopi-neo-core2" \
++|"friendlyelec,nanopi-neo2-black" \
++|"friendlyelec,nanopi-m1" \
++|"friendlyelec,zeropi")
++	ucidef_set_interface_wan "eth0"
++	;;
++"friendlyelec,nanopi-neo-air")
++	ucidef_set_interface_lan "wlan0"
++	;;
++"friendlyelec,nanopi-neo-core")
++	ucidef_set_interface_wan "eth0"
++	;;
+ *)
+ 	ucidef_set_interface_lan 'eth0'
+ 	;;
 diff --git a/target/linux/sunxi/image/cortex-a53.mk b/target/linux/sunxi/image/cortex-a53.mk
 index 65551407ce..424db0b01a 100644
 --- a/target/linux/sunxi/image/cortex-a53.mk
