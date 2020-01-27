@@ -1,24 +1,37 @@
-From 4e6e5c039c332f6a13b172e2806706d47a5eca54 Mon Sep 17 00:00:00 2001
+From 7a27e119e35755261433df86855c8b6c4315aba1 Mon Sep 17 00:00:00 2001
 From: klever1988 <klever1988@protonmail.com>
 Date: Mon, 27 Jan 2020 12:44:40 +0000
 Subject: [PATCH] r1s patch
 
+fix
 ---
- package/boot/uboot-sunxi/Makefile             |   9 +
+ package/boot/uboot-sunxi/Makefile             |  13 +-
  .../uboot-sunxi/patches/401-add-r1s-h5.patch  | 140 ++++++++++
  .../sunxi/base-files/etc/board.d/01_leds      |  20 ++
  .../sunxi/base-files/etc/board.d/02_network   |  27 ++
  target/linux/sunxi/image/cortex-a53.mk        |  14 +
  ...0-ARM-dts-friendlyelec-nanopi-r1s-h5.patch | 249 ++++++++++++++++++
- 6 files changed, 459 insertions(+)
+ 6 files changed, 461 insertions(+), 2 deletions(-)
  create mode 100644 package/boot/uboot-sunxi/patches/401-add-r1s-h5.patch
  create mode 100755 target/linux/sunxi/base-files/etc/board.d/01_leds
  create mode 100644 target/linux/sunxi/patches-4.14/230-ARM-dts-friendlyelec-nanopi-r1s-h5.patch
 
 diff --git a/package/boot/uboot-sunxi/Makefile b/package/boot/uboot-sunxi/Makefile
-index 6b83bd27c6..64cb390738 100644
+index 6b83bd27c6..33f7498ee2 100644
 --- a/package/boot/uboot-sunxi/Makefile
 +++ b/package/boot/uboot-sunxi/Makefile
+@@ -9,9 +9,9 @@
+ include $(TOPDIR)/rules.mk
+ include $(INCLUDE_DIR)/kernel.mk
+ 
+-PKG_VERSION:=2019.01
++PKG_VERSION:=2018.05
+ 
+-PKG_HASH:=50bd7e5a466ab828914d080d5f6a432345b500e8fba1ad3b7b61e95e60d51c22
++PKG_HASH:=4da13c2a6139a78cc08608f21fd4741db27eda336cfad7ab8264fda923b9c048
+ 
+ PKG_MAINTAINER:=Zoltan HERPAI <wigyori@uid0.hu>
+ 
 @@ -208,6 +208,14 @@ define U-Boot/nanopi_neo2
    UENV:=a64
  endef
