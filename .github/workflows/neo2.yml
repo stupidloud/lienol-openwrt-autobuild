@@ -3,11 +3,10 @@ name: neo2自动编译
 on:
   schedule:
     - cron: 0 11 * * *
-  # push:
-  #   branches: 
-  #     - master
-  watch:
-    types: [started]
+  push:
+    paths: 
+      - 'github/workflows/neo2.yml'
+      - 'diffconfigneo2'
 
 jobs:
 
