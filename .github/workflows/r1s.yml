@@ -1,4 +1,4 @@
-name: r1s自动编译
+name: r1s自动编译 
 
 on:
   schedule:
