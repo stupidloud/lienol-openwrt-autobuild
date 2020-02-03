@@ -1,6 +1,12 @@
 CONFIG_TARGET_sunxi=y
 CONFIG_TARGET_sunxi_cortexa53=y
 CONFIG_TARGET_sunxi_cortexa53_DEVICE_sun50i-h5-nanopi-r1s=y
+CONFIG_GNUTLS_ALPN=y
+CONFIG_GNUTLS_ANON=y
+CONFIG_GNUTLS_DTLS_SRTP=y
+CONFIG_GNUTLS_HEARTBEAT=y
+CONFIG_GNUTLS_OCSP=y
+CONFIG_GNUTLS_PSK=y
 CONFIG_LIBCURL_COOKIES=y
 CONFIG_LIBCURL_FILE=y
 CONFIG_LIBCURL_FTP=y
@@ -13,43 +19,36 @@ CONFIG_OPENSSL_OPTIMIZE_SPEED=y
 CONFIG_OPENSSL_WITH_DTLS=y
 CONFIG_OPENSSL_WITH_EC2M=y
 CONFIG_OPENSSL_WITH_NPN=y
-CONFIG_PACKAGE_UnblockNeteaseMusic=y
-CONFIG_PACKAGE_atop=y
 CONFIG_PACKAGE_ca-bundle=y
 CONFIG_PACKAGE_curl=y
 CONFIG_PACKAGE_htop=y
 CONFIG_PACKAGE_libcurl=y
-CONFIG_PACKAGE_libgd=y
-CONFIG_PACKAGE_libhttp-parser=y
-CONFIG_PACKAGE_libjpeg=y
-CONFIG_PACKAGE_libnghttp2=y
+CONFIG_PACKAGE_libgnutls=y
 CONFIG_PACKAGE_libopenssl-conf=y
 CONFIG_PACKAGE_libopenssl1.1=y
-CONFIG_PACKAGE_libpng=y
-CONFIG_PACKAGE_libstdcpp=y
 CONFIG_PACKAGE_luci-app-adguardhome=y
 # CONFIG_PACKAGE_luci-app-control-mia is not set
 # CONFIG_PACKAGE_luci-app-control-timewol is not set
 # CONFIG_PACKAGE_luci-app-control-webrestriction is not set
 # CONFIG_PACKAGE_luci-app-control-weburl is not set
-CONFIG_PACKAGE_luci-app-netdata=y
+# CONFIG_PACKAGE_luci-app-ddns is not set
 # CONFIG_PACKAGE_luci-app-pppoe-relay is not set
 # CONFIG_PACKAGE_luci-app-pppoe-server is not set
 # CONFIG_PACKAGE_luci-app-pptp-vpnserver-manyusers is not set
 CONFIG_PACKAGE_luci-app-privoxy=y
 # CONFIG_PACKAGE_luci-app-ramfree is not set
-CONFIG_PACKAGE_luci-app-unblockmusic=y
-CONFIG_PACKAGE_luci-app-vnstat=y
 # CONFIG_PACKAGE_luci-app-wol is not set
-CONFIG_PACKAGE_luci-i18n-netdata-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-privoxy-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-vnstat-zh-cn=y
 CONFIG_PACKAGE_luci-theme-argon-light-mod=y
-CONFIG_PACKAGE_netdata=y
-CONFIG_PACKAGE_node=y
+CONFIG_PACKAGE_openssl-util=y
 CONFIG_PACKAGE_privoxy=y
-CONFIG_PACKAGE_vnstat=y
-CONFIG_PACKAGE_vnstati=y
+CONFIG_PACKAGE_ddns-scripts=y
+# CONFIG_PACKAGE_ddns-scripts_cloudflare.com-v4 is not set
+# CONFIG_PACKAGE_ddns-scripts_freedns_42_pl is not set
+# CONFIG_PACKAGE_ddns-scripts_godaddy.com-v1 is not set
+# CONFIG_PACKAGE_ddns-scripts_no-ip_com is not set
+# CONFIG_PACKAGE_ddns-scripts_nsupdate is not set
+# CONFIG_PACKAGE_ddns-scripts_route53-v1 is not set
 CONFIG_PACKAGE_etherwake=y
 CONFIG_PACKAGE_iptables-mod-filter=y
 CONFIG_PACKAGE_kmod-crypto-aead=y
