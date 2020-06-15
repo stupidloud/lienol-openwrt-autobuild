@@ -39,11 +39,13 @@ jobs:
           
           git clone https://github.com/Lienol/openwrt
           cd openwrt
+          sed -i 's/Lienol\/openwrt-package/SuLingGG\/openwrt-package/' feeds.conf.default
           ./scripts/feeds clean && ./scripts/feeds update -a && ./scripts/feeds install -a
 
       - name: Custom configure file
         run: |
           cp diffconfig openwrt/.config
+          echo -e "\nCONFIG_PACKAGE_luci-app-passwall=y\n" >> openwrt/.config
           cd openwrt
           make defconfig
           
