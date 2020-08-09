@@ -35,6 +35,7 @@ jobs:
         cd openwrt/ && last_commit_id=`git rev-parse HEAD` && cd ../
         if [ "$saved_commit_id" = '$last_commit_id' ]; then
           #exit 0
+          echo 0
         fi
         #git add last_commit_id
         git commit -am 'synced'
