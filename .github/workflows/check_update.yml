@@ -31,17 +31,16 @@ jobs:
     - name: get Lienol openwrt clone
       run: |
         git clone --depth=1 https://github.com/Lienol/openwrt
-        #saved_commit_id=`cat last_commit_id`
-        cd openwrt/ && last_commit_id=`git rev-parse HEAD` && cd ../
-        echo $last_commit_id>last_commit_id
+        saved_commit_id=`cat last_commit_id`
+        cd openwrt/ && last_commit_id=`git rev-parse HEAD` && cd ../ && rm -r openwrt/
         if [ "$saved_commit_id" = '$last_commit_id' ]; then
-          #exit 0
-          echo 0
+          exit 0
         fi
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        echo $last_commit_id>last_commit_id
         git add last_commit_id
-        git commit -am 'synced'
+        git commit -m 'synced'
 
     # Runs a set of commands using the runners shell
     - name: Push
