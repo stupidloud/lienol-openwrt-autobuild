@@ -23,8 +23,8 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@master
-      with:
-        token: secrets.SEC_TOKEN
+      #with:
+        #token: secrets.SEC_TOKEN
 
     # Runs a single command using the runners shell
     - name: get Lienol openwrt clone
