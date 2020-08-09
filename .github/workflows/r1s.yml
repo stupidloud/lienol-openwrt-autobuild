@@ -1,11 +1,9 @@
 name: r1s自动编译 
 
 on:
-  schedule:
-    - cron: 0 13 * * *
   push:
     paths: 
-      - '.github/workflows/r1s.yml'
+      - 'last_commit_id'
       - 'diffconfigr1s'
 
 jobs:
