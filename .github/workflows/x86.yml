@@ -1,11 +1,9 @@
 name: X86自动编译
 
 on:
-  schedule:
-    - cron: 0 08 * * *
-  # push:
-  #   branches: 
-  #     - master
+  push:
+    paths: 
+      - 'last_commit_id'
   watch:
     types: [started]
 
