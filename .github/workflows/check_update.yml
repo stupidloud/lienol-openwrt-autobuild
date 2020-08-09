@@ -37,7 +37,8 @@ jobs:
           #exit 0
           echo 0
         fi
-        #git add last_commit_id
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
         git commit -am 'synced'
 
     # Runs a set of commands using the runners shell
