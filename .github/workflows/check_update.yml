@@ -33,13 +33,15 @@ jobs:
         git clone --depth=1 https://github.com/Lienol/openwrt
         #saved_commit_id=`cat last_commit_id`
         cd openwrt/ && last_commit_id=`git rev-parse HEAD` && cd ../
+        echo $last_commit_id>last_commit_id
         if [ "$saved_commit_id" = '$last_commit_id' ]; then
           #exit 0
           echo 0
         fi
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git commit -am 'synced' -u no
+        git add last_commit_id
+        git commit -am 'synced'
 
     # Runs a set of commands using the runners shell
     - name: Push
