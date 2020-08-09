@@ -33,7 +33,7 @@ jobs:
         git clone --depth=1 https://github.com/Lienol/openwrt
         saved_commit_id=`cat last_commit_id`
         cd openwrt/ && last_commit_id=`git rev-parse HEAD` && cd ../ && rm -r openwrt/
-        if [ "$saved_commit_id" != '$last_commit_id' ]; then
+        if [ "$saved_commit_id" != "$last_commit_id" ]; then
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           echo $last_commit_id>last_commit_id
